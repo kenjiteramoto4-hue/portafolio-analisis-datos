@@ -9,3 +9,6 @@
 [3_Plan_de_Busqueda_de_Empleo.pdf](https://github.com/user-attachments/files/30771003/3_Plan_de_Busqueda_de_Empleo.pdf)
 [2_Perfil_LinkedIn_Borrador.docx](https://github.com/user-attachments/files/30771002/2_Perfil_LinkedIn_Borrador.docx)
 [2_Perfil_LinkedIn_Borrador.pdf](https://github.com/user-attachments/files/30771001/2_Perfil_LinkedIn_Borrador.pdf)
+
+# LinkeIn
+https://www.linkedin.com/in/kenji-teramoto-data-analyst/
