@@ -10,5 +10,14 @@
 [2_Perfil_LinkedIn_Borrador.docx](https://github.com/user-attachments/files/30771002/2_Perfil_LinkedIn_Borrador.docx)
 [2_Perfil_LinkedIn_Borrador.pdf](https://github.com/user-attachments/files/30771001/2_Perfil_LinkedIn_Borrador.pdf)
 
-# LinkeIn
-https://www.linkedin.com/in/kenji-teramoto-data-analyst/
+# Kenji Teramoto — Portafolio de Análisis de Datos
+
+Ingeniero Industrial en transición a Análisis de Datos.
+Estudiante del programa de Análisis de Datos en TripleTen.
+
+Aquí publico proyectos de SQL, Python y Excel aplicados a datos
+operativos y logística.
+
+## Contacto
+- LinkedIn: https://www.linkedin.com/in/kenji-teramoto-data-analyst/
+- Email: kenjiteramoto4@gmail.com
