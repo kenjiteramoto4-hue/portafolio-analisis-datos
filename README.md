@@ -1,14 +1,73 @@
 # Ingeniero Industrial en transición a Análisis de Datos. Estudiante de TripleTen. Aquí publico mis proyectos de SQL, Python y Excel aplicados a datos operativos y logística.
-[1_Hoja_de_Ruta_Profesional.pdf](https://github.com/user-attachments/files/30770999/1_Hoja_de_Ruta_Profesional.pdf)
-[1_Hoja_de_Ruta_Profesional.docx](https://github.com/user-attachments/files/30771000/1_Hoja_de_Ruta_Profesional.docx)
-[Job_Search_Plan_Kenji_Teramoto.docx](https://github.com/user-attachments/files/30771009/Job_Search_Plan_Kenji_Teramoto.docx)
-[Job_Search_Plan_Kenji_Teramoto (1).docx](https://github.com/user-attachments/files/30771008/Job_Search_Plan_Kenji_Teramoto.1.docx)
-[CV_Kenji_Teramoto_EN.docx](https://github.com/user-attachments/files/30771007/CV_Kenji_Teramoto_EN.docx)
-[4_Tracker_Busqueda_Empleo_16_Semanas.xlsx](https://github.com/user-attachments/files/30771006/4_Tracker_Busqueda_Empleo_16_Semanas.xlsx)
-[3_Plan_de_Busqueda_de_Empleo.docx](https://github.com/user-attachments/files/30771004/3_Plan_de_Busqueda_de_Empleo.docx)
-[3_Plan_de_Busqueda_de_Empleo.pdf](https://github.com/user-attachments/files/30771003/3_Plan_de_Busqueda_de_Empleo.pdf)
-[2_Perfil_LinkedIn_Borrador.docx](https://github.com/user-attachments/files/30771002/2_Perfil_LinkedIn_Borrador.docx)
-[2_Perfil_LinkedIn_Borrador.pdf](https://github.com/user-attachments/files/30771001/2_Perfil_LinkedIn_Borrador.pdf)
+
+[analisis-servicios-refrigeracion.zip](https://github.com/user-attachments/files/31048761/analisis-servicios-refrigeracion.zip)
+[analisis-inventario-refacciones.zip](https://github.com/user-attachments/files/31048760/analisis-inventario-refacciones.zip)
+[README.md](https://github.com/user-attachments/files/31048824/README.md)
+# Kenji Teramoto — Portafolio de Análisis de Datos
+
+Ingeniero Industrial en transición a Análisis de Datos, con experiencia real coordinando
+operaciones de servicio de refrigeración comercial a nivel nacional.
+
+Mi enfoque: convertir datos operativos en decisiones concretas. No analizo datos en abstracto
+—entiendo de dónde vienen, porque yo mismo gestioné las operaciones que los generan.
+
+**Herramientas:** Python (pandas) · SQL · Excel · matplotlib
+
+---
+
+## Proyectos
+
+### 1. [Tiempos de respuesta en servicios de refrigeración](./analisis-servicios-refrigeracion)
+
+Análisis de 1,428 folios de servicio para entender qué hace que un servicio tarde en cerrarse.
+
+**Hallazgo:** el cuello de botella no es la geografía, son las refacciones. Un servicio que
+requiere pieza tarda más del doble (55 h vs 27 h) y representa el 38% de los folios. La brecha
+entre regiones es de solo 9 horas.
+
+`Python` · `pandas` · `SQL` · limpieza de datos · análisis exploratorio
+
+---
+
+### 2. [Costos e inventario de refacciones](./analisis-inventario-refacciones)
+
+Análisis de 2,124 movimientos de inventario para identificar dónde se concentra el gasto y qué
+piezas provocan quiebres de stock.
+
+**Hallazgo:** el 85% del gasto vive en solo 5 refacciones (análisis de Pareto). Y las piezas
+críticas —las que detienen un servicio— se agotan el doble que las demás, sobre todo en verano.
+
+`Python` · `pandas` · `SQL` · análisis de Pareto · KPIs
+
+---
+
+Los dos proyectos se complementan: el primero detecta que las refacciones son el problema; el
+segundo identifica exactamente cuáles blindar. Juntos forman una recomendación accionable de negocio.
+
+---
+
+## Sobre mí
+
+- **Formación:** Ingeniería Industrial (UVM) · Programa de Análisis de Datos (TripleTen, en curso)
+- **Experiencia:** Coordinación de servicios y operaciones de refrigeración comercial a nivel nacional
+- **Idiomas:** Español (nativo) · Inglés (avanzado) · Japonés (básico)
+
+## Contacto
+
+- LinkedIn: https://www.linkedin.com/in/kenji-teramoto-data-analyst/
+- Email: kenjiteramoto4@gmail.com
+
+---
+
+*Los datasets de estos proyectos son sintéticos, generados para cada análisis. Replican la
+estructura y los problemas de calidad de sistemas reales de gestión de servicios, basados en mi
+experiencia operativa. No contienen información de ninguna empresa real.*
+
+
+[Preguntas_Reflexion_Kenji_Teramoto.docx](https://github.com/user-attachments/files/31048784/Preguntas_Reflexion_Kenji_Teramoto.docx)
+[Plan_de_Networking_Kenji_Teramoto.docx](https://github.com/user-attachments/files/31048783/Plan_de_Networking_Kenji_Teramoto.docx)
+[Bitacora_Networking_Kenji_Teramoto.docx](https://github.com/user-attachments/files/31048782/Bitacora_Networking_Kenji_Teramoto.docx)
+
 
 # Kenji Teramoto — Portafolio de Análisis de Datos
 
