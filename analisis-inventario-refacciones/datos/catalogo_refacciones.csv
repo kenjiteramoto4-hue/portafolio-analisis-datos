@@ -1,0 +1,19 @@
+refaccion,categoria,costo_unitario,lead_time_dias,critica,sku
+Compresor 1/3 HP,Compresor,4800,12,True,REF-101
+Compresor 1/2 HP,Compresor,6200,14,True,REF-102
+Compresor 3/4 HP,Compresor,8100,18,True,REF-103
+Gas refrigerante R-134a,Refrigerante,950,4,True,REF-104
+Gas refrigerante R-404a,Refrigerante,1400,6,True,REF-105
+Termostato digital,Control,620,5,False,REF-106
+Termostato mecanico,Control,290,3,False,REF-107
+Empaque de puerta,Sello,480,7,True,REF-108
+Ventilador evaporador,Ventilacion,890,8,False,REF-109
+Ventilador condensador,Ventilacion,1050,9,False,REF-110
+Rele de arranque,Electrico,180,3,False,REF-111
+Capacitor de arranque,Electrico,240,4,False,REF-112
+Filtro deshidratador,Filtro,160,5,False,REF-113
+Valvula de expansion,Control,1350,11,False,REF-114
+Resistencia de deshielo,Electrico,540,6,False,REF-115
+Motor de damper,Ventilacion,780,10,False,REF-116
+Sensor de temperatura,Control,310,4,False,REF-117
+Contactor,Electrico,420,5,False,REF-118
