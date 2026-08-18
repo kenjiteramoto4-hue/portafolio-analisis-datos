@@ -1,7 +1,7 @@
 -- =====================================================================
 -- Análisis de costos e inventario de refacciones de refrigeración
 -- Autor: Kenji Teramoto
--- Tabla: inventario
+-- Tabla principal: inventario
 -- =====================================================================
 
 
@@ -9,35 +9,46 @@
 -- 1. CALIDAD DE DATOS
 -- ---------------------------------------------------------------------
 
--- 1.1 Volumen, duplicados y nulos
+-- 1.1 Volumen, duplicados, nulos y cantidades inválidas
+
 SELECT
-    COUNT(*)                                                 AS total_movimientos,
-    COUNT(DISTINCT id_movimiento)                            AS movimientos_unicos,
-    SUM(CASE WHEN costo_unitario IS NULL THEN 1 ELSE 0 END)  AS sin_costo,
-    SUM(CASE WHEN cantidad       IS NULL THEN 1 ELSE 0 END)  AS sin_cantidad,
-    SUM(CASE WHEN cantidad < 0 THEN 1 ELSE 0 END)            AS cantidades_negativas
+    COUNT(*) AS total_movimientos,
+    COUNT(DISTINCT id_movimiento) AS movimientos_unicos,
+    SUM(CASE WHEN costo_unitario IS NULL THEN 1 ELSE 0 END) AS sin_costo,
+    SUM(CASE WHEN cantidad IS NULL THEN 1 ELSE 0 END) AS sin_cantidad,
+    SUM(CASE WHEN cantidad < 0 THEN 1 ELSE 0 END) AS cantidades_negativas
 FROM inventario;
 
--- 1.2 Inconsistencias de captura en region
-SELECT region, TRIM(UPPER(region)) AS normalizada, COUNT(*) AS n
+
+-- 1.2 Revisión de consistencia en regiones
+
+SELECT
+    region,
+    TRIM(UPPER(region)) AS region_normalizada,
+    COUNT(*) AS movimientos
 FROM inventario
 GROUP BY region
-ORDER BY normalizada;
+ORDER BY region_normalizada;
 
 
 -- ---------------------------------------------------------------------
 -- 2. GASTO POR CATEGORÍA
---    Filtra registros inválidos (nulos y cantidades no positivas).
 -- ---------------------------------------------------------------------
 
 SELECT
     categoria,
-    COUNT(*)                                        AS movimientos,
-    ROUND(SUM(cantidad * costo_unitario), 0)        AS gasto_total,
-    ROUND(100.0 * SUM(cantidad * costo_unitario)
-          / (SELECT SUM(cantidad * costo_unitario)
-             FROM inventario
-             WHERE cantidad > 0 AND costo_unitario IS NOT NULL), 1) AS pct_del_gasto
+    COUNT(*) AS movimientos,
+    ROUND(SUM(cantidad * costo_unitario), 0) AS gasto_total,
+    ROUND(
+        100.0 * SUM(cantidad * costo_unitario)
+        / (
+            SELECT SUM(cantidad * costo_unitario)
+            FROM inventario
+            WHERE cantidad > 0
+              AND costo_unitario IS NOT NULL
+        ),
+        1
+    ) AS pct_del_gasto
 FROM inventario
 WHERE cantidad > 0
   AND costo_unitario IS NOT NULL
@@ -47,16 +58,21 @@ ORDER BY gasto_total DESC;
 
 -- ---------------------------------------------------------------------
 -- 3. ANÁLISIS DE PARETO POR REFACCIÓN
---    ¿Qué piezas concentran el gasto? (regla 80/20)
 -- ---------------------------------------------------------------------
 
 SELECT
     refaccion,
-    ROUND(SUM(cantidad * costo_unitario), 0)        AS gasto_total,
-    ROUND(100.0 * SUM(cantidad * costo_unitario)
-          / (SELECT SUM(cantidad * costo_unitario)
-             FROM inventario
-             WHERE cantidad > 0 AND costo_unitario IS NOT NULL), 1) AS pct_del_gasto
+    ROUND(SUM(cantidad * costo_unitario), 0) AS gasto_total,
+    ROUND(
+        100.0 * SUM(cantidad * costo_unitario)
+        / (
+            SELECT SUM(cantidad * costo_unitario)
+            FROM inventario
+            WHERE cantidad > 0
+              AND costo_unitario IS NOT NULL
+        ),
+        1
+    ) AS pct_del_gasto
 FROM inventario
 WHERE cantidad > 0
   AND costo_unitario IS NOT NULL
@@ -65,15 +81,29 @@ ORDER BY gasto_total DESC;
 
 
 -- ---------------------------------------------------------------------
--- 4. QUIEBRES DE STOCK: PIEZAS CRÍTICAS VS NO CRÍTICAS
+-- 4. QUIEBRES DE STOCK
+--    Comparación entre piezas críticas y no críticas
 -- ---------------------------------------------------------------------
 
 SELECT
     critica,
-    COUNT(*)                                        AS movimientos,
-    SUM(CASE WHEN hubo_stockout IN ('True','1') THEN 1 ELSE 0 END) AS quiebres,
-    ROUND(100.0 * SUM(CASE WHEN hubo_stockout IN ('True','1') THEN 1 ELSE 0 END)
-          / COUNT(*), 1)                            AS tasa_quiebre_pct
+    COUNT(*) AS movimientos,
+    SUM(
+        CASE
+            WHEN hubo_stockout IN ('True', '1') THEN 1
+            ELSE 0
+        END
+    ) AS quiebres,
+    ROUND(
+        100.0 *
+        SUM(
+            CASE
+                WHEN hubo_stockout IN ('True', '1') THEN 1
+                ELSE 0
+            END
+        ) / COUNT(*),
+        1
+    ) AS tasa_quiebre_pct
 FROM inventario
 WHERE cantidad > 0
 GROUP BY critica;
@@ -81,14 +111,27 @@ GROUP BY critica;
 
 -- ---------------------------------------------------------------------
 -- 5. ESTACIONALIDAD DE LOS QUIEBRES
---    El mes se extrae del texto de la fecha (formato DD/MM/AAAA).
 -- ---------------------------------------------------------------------
 
 SELECT
-    SUBSTR(fecha, 4, 2)                             AS mes,
-    COUNT(*)                                        AS movimientos,
-    ROUND(100.0 * SUM(CASE WHEN hubo_stockout IN ('True','1') THEN 1 ELSE 0 END)
-          / COUNT(*), 1)                            AS tasa_quiebre_pct
+    SUBSTR(fecha, 4, 2) AS mes,
+    COUNT(*) AS movimientos,
+    SUM(
+        CASE
+            WHEN hubo_stockout IN ('True', '1') THEN 1
+            ELSE 0
+        END
+    ) AS quiebres,
+    ROUND(
+        100.0 *
+        SUM(
+            CASE
+                WHEN hubo_stockout IN ('True', '1') THEN 1
+                ELSE 0
+            END
+        ) / COUNT(*),
+        1
+    ) AS tasa_quiebre_pct
 FROM inventario
 WHERE cantidad > 0
 GROUP BY SUBSTR(fecha, 4, 2)
@@ -96,15 +139,29 @@ ORDER BY mes;
 
 
 -- ---------------------------------------------------------------------
--- 6. GASTO Y QUIEBRES POR REGIÓN
+-- 6. GASTO, LEAD TIME Y QUIEBRES POR REGIÓN
 -- ---------------------------------------------------------------------
 
 SELECT
-    TRIM(region)                                    AS region,
-    ROUND(SUM(cantidad * costo_unitario), 0)        AS gasto_total,
-    ROUND(AVG(lead_time_dias), 1)                   AS lead_time_promedio,
-    ROUND(100.0 * SUM(CASE WHEN hubo_stockout IN ('True','1') THEN 1 ELSE 0 END)
-          / COUNT(*), 1)                            AS tasa_quiebre_pct
+    TRIM(region) AS region,
+    ROUND(SUM(cantidad * costo_unitario), 0) AS gasto_total,
+    ROUND(AVG(lead_time_dias), 1) AS lead_time_promedio,
+    SUM(
+        CASE
+            WHEN hubo_stockout IN ('True', '1') THEN 1
+            ELSE 0
+        END
+    ) AS quiebres,
+    ROUND(
+        100.0 *
+        SUM(
+            CASE
+                WHEN hubo_stockout IN ('True', '1') THEN 1
+                ELSE 0
+            END
+        ) / COUNT(*),
+        1
+    ) AS tasa_quiebre_pct
 FROM inventario
 WHERE cantidad > 0
   AND costo_unitario IS NOT NULL
@@ -113,20 +170,72 @@ ORDER BY gasto_total DESC;
 
 
 -- ---------------------------------------------------------------------
--- 7. LAS 5 REFACCIONES A BLINDAR
---    Cruce de gasto alto + tasa de quiebre, para priorizar el inventario.
+-- 7. PRIORIZACIÓN DE REFACCIONES
+--    Identifica piezas que combinan:
+--    • alto gasto
+--    • alta tasa de quiebre
+--    • criticidad
+--    • lead time
 -- ---------------------------------------------------------------------
+
+WITH resumen AS (
+
+    SELECT
+        refaccion,
+        MAX(critica) AS critica,
+        ROUND(SUM(cantidad * costo_unitario), 0) AS gasto_total,
+        ROUND(AVG(lead_time_dias), 1) AS lead_time_promedio,
+
+        ROUND(
+            100.0 *
+            SUM(
+                CASE
+                    WHEN hubo_stockout IN ('True', '1') THEN 1
+                    ELSE 0
+                END
+            ) / COUNT(*),
+            1
+        ) AS tasa_quiebre_pct
+
+    FROM inventario
+
+    WHERE cantidad > 0
+      AND costo_unitario IS NOT NULL
+
+    GROUP BY refaccion
+)
 
 SELECT
     refaccion,
     critica,
-    ROUND(SUM(cantidad * costo_unitario), 0)        AS gasto_total,
-    ROUND(AVG(lead_time_dias), 0)                   AS lead_time,
-    ROUND(100.0 * SUM(CASE WHEN hubo_stockout IN ('True','1') THEN 1 ELSE 0 END)
-          / COUNT(*), 1)                            AS tasa_quiebre_pct
-FROM inventario
-WHERE cantidad > 0
-  AND costo_unitario IS NOT NULL
-GROUP BY refaccion, critica
-ORDER BY gasto_total DESC
-LIMIT 5;
+    gasto_total,
+    lead_time_promedio,
+    tasa_quiebre_pct,
+
+    CASE
+        WHEN critica IN ('True', '1')
+             AND tasa_quiebre_pct >= 20
+        THEN 'ALTA'
+
+        WHEN tasa_quiebre_pct >= 10
+             OR critica IN ('True', '1')
+        THEN 'MEDIA'
+
+        ELSE 'BAJA'
+    END AS prioridad
+
+FROM resumen
+
+ORDER BY
+    CASE
+        WHEN critica IN ('True', '1')
+             AND tasa_quiebre_pct >= 20
+        THEN 1
+
+        WHEN tasa_quiebre_pct >= 10
+             OR critica IN ('True', '1')
+        THEN 2
+
+        ELSE 3
+    END,
+    gasto_total DESC;
